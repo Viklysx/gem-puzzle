@@ -38,7 +38,7 @@ class PlayingField {
         });
 
         if (isFinished) { // если все фишки на своих местах
-
+            alert('ура!')
         }
     }
 
@@ -52,7 +52,6 @@ class PlayingField {
             value = numbers[i - 1] + 1;
             combination.push(value);
         }
-
         // проверяем комбинацию на решаемость
         let z = 0;
         for (let i = 0; i < combination.length - 1; i++) {
@@ -73,6 +72,9 @@ class PlayingField {
                 const left = (i + 1) % 4; // позиция ячейки, считая слева
                 const top = ((i + 1) - left) / 4;
 
+                const leftImg = (combination[i]-1) % 4; // позиция ячейки, считая слева
+                const topImg = ((combination[i]-1) - leftImg) / 4;
+
                 this.cells.push({
                     value: value,
                     left: left,
@@ -82,13 +84,15 @@ class PlayingField {
 
                 cell.style.top = `${top*this.cellSize}px`;
                 cell.style.left = `${left*this.cellSize}px`;
+                cell.style['background-position'] = `calc((100% / 3) * ${leftImg}) calc((100% / 3) * ${topImg})`;
                 root.append(cell);
+                console.log(top, left, combination[i]);
 
                 cell.addEventListener('click', () => {
                     this.move(i + 1);
                 })
             }
-        }
+        } else this.startCombination();
     }
 
 
