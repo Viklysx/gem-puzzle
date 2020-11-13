@@ -1,95 +1,97 @@
 import './css/style.css';
 import './css/style.scss';
 
-const root = document.querySelector('#root');
-const cellSize = 100;
+import PlayingField from './components/PlayingField';
 
-const empty = { // пустая ячейка
-    value: 0,
-    top: 0,
-    left: 0
-}
+const start = new PlayingField();
 
-const cells = [];
-cells.push(empty); // здесь храним информацию о клетках
+// const root = document.querySelector('#root');
+// const cellSize = 100;
 
-function move(index) {
-    const cell = cells[index];
-    const leftDiff = Math.abs(empty.left - cell.left);
-    const topDiff = Math.abs(empty.top - cell.top);
+// const empty = { // пустая ячейка
+//     value: 0,
+//     top: 0,
+//     left: 0
+// }
 
-    if (leftDiff + topDiff > 1) { // если ячейки не соседние
-        return
-    }
+// const cells = [];
+// cells.push(empty); // здесь храним информацию о клетках
 
-    cell.element.style.top = `${empty.top*cellSize}px`;
-    cell.element.style.left = `${empty.left*cellSize}px`;
+// function move(index) {
+//     const cell = cells[index];
+//     const leftDiff = Math.abs(empty.left - cell.left);
+//     const topDiff = Math.abs(empty.top - cell.top);
 
-    const emptyLeft = empty.left; // координаты пустой ячейки
-    const emptyTop = empty.top;
+//     if (leftDiff + topDiff > 1) { // если ячейки не соседние
+//         return
+//     }
 
-    empty.left = cell.left; // координаты текущей ячейки
-    empty.top = cell.top;
+//     cell.element.style.top = `${empty.top*cellSize}px`;
+//     cell.element.style.left = `${empty.left*cellSize}px`;
 
-    cell.left = emptyLeft;
-    cell.top = emptyTop;
+//     const emptyLeft = empty.left; // координаты пустой ячейки
+//     const emptyTop = empty.top;
 
-    const isFinished = cells.every(cell => {
-        return cell.value === cell.top * 4 + cell.left;
-    });
+//     empty.left = cell.left; // координаты текущей ячейки
+//     empty.top = cell.top;
 
-    if (isFinished) { // если все фишки на своих местах
+//     cell.left = emptyLeft;
+//     cell.top = emptyTop;
 
-    }
-}
+//     const isFinished = cells.every(cell => {
+//         return cell.value === cell.top * 4 + cell.left;
+//     });
 
-const numbers = [...Array(15).keys()]
-    .sort(() => Math.random() - 0.5);
-const combination = [];
+//     if (isFinished) { // если все фишки на своих местах
 
-let value;
+//     }
+// }
 
-for (let i = 1; i <= 15; i++) {
-    value = numbers[i - 1] + 1;
-    combination.push(value);
-}
-console.log(combination);
+// const numbers = [...Array(15).keys()]
+//     .sort(() => Math.random() - 0.5);
+// const combination = [];
 
-// проверяем комбинацию на решаемость
-let z = 0;
-for (let i = 0; i < combination.length - 1; i++) {
-    for (let j = i + 1; j < combination.length; j++) {
-        if (combination[i] > combination[j]) {
-            console.log(combination[i], combination[j]);
-            z++;
-        }
-    }
-}
+// let value;
 
-z = z + 1; // прибавили номер ряда пустой ячейки
-if (z % 2 === 0) {
-    for (let i = 0; i < 15; i++) {
-        const cell = document.createElement('div');
+// for (let i = 1; i <= 15; i++) {
+//     value = numbers[i - 1] + 1;
+//     combination.push(value);
+// }
 
-        cell.className = 'cell';
-        cell.innerHTML = combination[i];
+// // проверяем комбинацию на решаемость
+// let z = 0;
+// for (let i = 0; i < combination.length - 1; i++) {
+//     for (let j = i + 1; j < combination.length; j++) {
+//         if (combination[i] > combination[j]) {
+//             z++;
+//         }
+//     }
+// }
 
-        const left = (i+1) % 4; // позиция ячейки, считая слева
-        const top = ((i+1) - left) / 4;
+// z = z + 1; // прибавили номер ряда пустой ячейки
+// if (z % 2 === 0) {
+//     for (let i = 0; i < 15; i++) {
+//         const cell = document.createElement('div');
 
-        cells.push({
-            value: value,
-            left: left,
-            top: top,
-            element: cell
-        })
+//         cell.className = 'cell';
+//         cell.innerHTML = combination[i];
 
-        cell.style.top = `${top*cellSize}px`;
-        cell.style.left = `${left*cellSize}px`;
-        root.append(cell);
+//         const left = (i+1) % 4; // позиция ячейки, считая слева
+//         const top = ((i+1) - left) / 4;
 
-        cell.addEventListener('click', () => {
-            move(i+1);
-        })
-    }
-}
+//         cells.push({
+//             value: value,
+//             left: left,
+//             top: top,
+//             element: cell
+//         })
+
+//         cell.style.top = `${top*cellSize}px`;
+//         cell.style.left = `${left*cellSize}px`;
+//         root.append(cell);
+
+//         cell.addEventListener('click', () => {
+//             move(i+1);
+//         })
+//     }
+// }
