@@ -63,11 +63,13 @@ class PlayingField {
         }
         z = z + 1; // прибавили номер ряда пустой ячейки
         if (z % 2 === 0) {
+            let indexImg;
             for (let i = 0; i < 15; i++) {
                 const cell = document.createElement('div');
 
-                cell.className = 'cell';
+                cell.className = 'cell';               
                 cell.innerHTML = combination[i];
+                indexImg = combination[0];
 
                 const left = (i + 1) % 4; // позиция ячейки, считая слева
                 const top = ((i + 1) - left) / 4;
@@ -92,6 +94,10 @@ class PlayingField {
                     this.move(i + 1);
                 })
             }
+            let elements =  document.querySelectorAll('.cell');
+            elements.forEach(key => {
+                key.style.backgroundImage = `url(./img/${indexImg}.jpg)`;
+            })
         } else this.startCombination();
     }
 
