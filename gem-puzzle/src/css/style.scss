@@ -1,37 +1,94 @@
-*, *:after, *:before {
+*,
+*:after,
+*:before {
     box-sizing: border-box;
     padding: 0px;
     margin: 0px;
 }
 
-$font-size: 1rem;
-$font-color:blue;
-
-html {
-    font-size: $font-size;
+body {
+    font-size: 16px;
+    font-family: 'Caveat', cursive;
+    background: rgb(36, 35, 35);
 }
 
 .root {
-    width: 400px;
-    height: 400px;
-    border: 1px solid black;
-    border-radius: 10px;
+    max-width: 400px;
+    margin: 0 auto;
     position: relative;
+
+    &-elements {
+        position: absolute;
+        top: 600px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
 }
 
 .cell {
     width: 100px;
     height: 100px;
-    border: 3px solid blue;
+    border: 2px solid white;
     border-radius: 10px;
     position: absolute;
-    font-size: 60px;
+    font-size: 80px;
     display: flex;
     justify-content: center;
     align-items: center;
     transition: all 0.3s;
     cursor: pointer;
-    // background: url('https://img2.goodfon.ru/original/1024x1024/d/f1/ushastaya-sova-sova-ptica-2055.jpg');
-    // background: url('./img/1.jpg');
     background-size: 400% 400%;
+    color: white;
+}
+
+span {
+    text-shadow: 0px 0px 10px #000;
+}
+
+$colors: (new-game: #a972cb,
+    reset: #ef6eae,
+    resolve: #19bc8b);
+
+
+@each $button,
+$color in $colors {
+    .#{$button} {
+        --color: #{$color};
+        --hover: #{adjust-hue($color, 45deg)};
+    }
+}
+
+.new-game:hover,
+.new-game:focus {
+    transform: translateY(-4px);
+}
+
+.reset:hover,
+.reset:focus {
+    transform: translateY(-4px);
+}
+
+.resolve:hover,
+.resolve:focus {
+    transform: translateY(-0.25em);
+}
+
+button {
+    color: var(--color);
+    transition: 0.25s;
+    background: none;
+    border: 2px solid;
+    font: inherit;
+    line-height: 1;
+    margin: 8px;
+    font-size: 25px;
+    padding: 5px;
+    width: 150px;
+
+    &:hover,
+    &:focus {
+        border-color: var(--hover);
+        color: #fff;
+    }
 }

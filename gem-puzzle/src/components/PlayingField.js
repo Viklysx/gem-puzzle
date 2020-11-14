@@ -1,6 +1,6 @@
 class PlayingField {
     constructor() {
-        this.root = document.querySelector('#root');
+        this.wrapper = document.querySelector('#root');
         this.cellSize = 100;
         this.empty = { // пустая ячейка
             value: 0,
@@ -21,7 +21,7 @@ class PlayingField {
             return
         }
 
-        cell.element.style.top = `${this.empty.top*this.cellSize}px`;
+        cell.element.style.top = `${this.empty.top*this.cellSize + 100}px`;
         cell.element.style.left = `${this.empty.left*this.cellSize}px`;
 
         const emptyLeft = this.empty.left; // координаты пустой ячейки
@@ -68,7 +68,7 @@ class PlayingField {
                 const cell = document.createElement('div');
 
                 cell.className = 'cell';               
-                cell.innerHTML = combination[i];
+                cell.innerHTML = `<span>${combination[i]}</span>`;
                 indexImg = combination[0];
 
                 const left = (i + 1) % 4; // позиция ячейки, считая слева
@@ -84,21 +84,47 @@ class PlayingField {
                     element: cell
                 })
 
-                cell.style.top = `${top*this.cellSize}px`;
+                cell.style.top = `${top*this.cellSize + 100}px`;
                 cell.style.left = `${left*this.cellSize}px`;
                 cell.style['background-position'] = `calc((100% / 3) * ${leftImg}) calc((100% / 3) * ${topImg})`;
-                root.append(cell);
+                this.wrapper.append(cell);
                 console.log(top, left, combination[i]);
 
                 cell.addEventListener('click', () => {
                     this.move(i + 1);
                 })
             }
+            // wrapper.append(root);          
             let elements =  document.querySelectorAll('.cell');
             elements.forEach(key => {
                 key.style.backgroundImage = `url(./img/${indexImg}.jpg)`;
             })
+            this.addButtons();
         } else this.startCombination();
+    }
+
+    createElements(options) {
+        this.elem = document.createElement(options.node);
+        this.elem.className = options.class;
+        return this.elem;
+    }
+
+    addButtons() {
+        const wrapButtons = this.createElements({node: 'div', class: 'root-elements'});
+        const newGame = this.createElements({node: 'button', class: 'new-game'});
+        const reset = this.createElements({node: 'button', class: 'reset'});
+        const sound = this.createElements({node: 'button', class: 'new-game'});
+        const resolve = this.createElements({node: 'button', class: 'resolve'});
+        const viewNumbers = this.createElements({node: 'button', class: 'resolve'});
+        const rating = this.createElements({node: 'button', class: 'reset'});
+        newGame.textContent = 'Новая игра';
+        sound.textContent = 'Вкл/выкл звук';
+        reset.textContent = 'Сбросить';
+        resolve.textContent = 'Решение';
+        viewNumbers.textContent = 'Скрыть/показать цифры';
+        rating.textContent = 'Топ 10';
+        wrapButtons.append(newGame, reset, resolve, viewNumbers, rating, sound); 
+        this.wrapper.append(wrapButtons);
     }
 
 
