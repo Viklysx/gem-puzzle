@@ -29,17 +29,28 @@ class PlayingField {
 
         this.empty.left = cell.left; // координаты текущей ячейки
         this.empty.top = cell.top;
+        
 
         cell.left = emptyLeft;
         cell.top = emptyTop;
 
-        const isFinished = this.cells.every(cell => {
-            return cell.value === cell.top * 4 + cell.left;
-        });
+        let caseСounter = 0;
+        this.cells.forEach((keys) => {
+            if (keys.value > 0 && keys.value < 5) {
+                if (keys.top === 0 && keys.left == keys.value - 1) caseСounter++;
+            }
+            if (keys.value > 4 && keys.value < 9) {
+                if (keys.top === 1 && keys.left == keys.value - 5) caseСounter++;
+            }
+            if (keys.value > 8 && keys.value < 13) {
+                if (keys.top == 2 && keys.left == keys.value - 9) caseСounter++;
+            }
+            if (keys.value > 12 && keys.value < 16) {
+                if (keys.top == 3 && keys.left == keys.value - 13) caseСounter++;
+            }
+        })
 
-        if (isFinished) { // если все фишки на своих местах
-            alert('ура!')
-        }
+        if (caseСounter == 15) alert('ура!');
     }
 
     startCombination() {
@@ -78,7 +89,7 @@ class PlayingField {
                 const topImg = ((combination[i]-1) - leftImg) / 4;
 
                 this.cells.push({
-                    value: value,
+                    value: combination[i],
                     left: left,
                     top: top,
                     element: cell
@@ -88,13 +99,12 @@ class PlayingField {
                 cell.style.left = `${left*this.cellSize}px`;
                 cell.style['background-position'] = `calc((100% / 3) * ${leftImg}) calc((100% / 3) * ${topImg})`;
                 this.wrapper.append(cell);
-                console.log(top, left, combination[i]);
 
                 cell.addEventListener('click', () => {
                     this.move(i + 1);
                 })
             }
-            // wrapper.append(root);          
+
             let elements =  document.querySelectorAll('.cell');
             elements.forEach(key => {
                 key.style.backgroundImage = `url(./img/${indexImg}.jpg)`;
@@ -126,8 +136,6 @@ class PlayingField {
         wrapButtons.append(newGame, reset, resolve, viewNumbers, rating, sound); 
         this.wrapper.append(wrapButtons);
     }
-
-
 }
 
 export default PlayingField;
