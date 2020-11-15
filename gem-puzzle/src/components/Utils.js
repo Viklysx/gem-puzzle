@@ -1,8 +1,9 @@
 import PlayingField from './PlayingField';
 
 class Utils {
-    constructor(cells) {
+    constructor(cells, timerName) {
         this.cells = cells;
+        this.timerName = timerName;
     }
 
     checkFinal() {
@@ -22,13 +23,18 @@ class Utils {
             }
         })
         console.log(counter);
-        if (counter >= 15) {
-            console.log('ура!');  
+        if (counter >= 15) {  
+            clearInterval(this.timerName);
             const cell = document.querySelectorAll('.cell');
+            const text = document.querySelector('.text-final');
+            const textTime = document.querySelector('.text-time');
+            const textMin = document.querySelector('.text-time-min');
+            const textSteps = document.querySelector('.text-step-content');
             cell.forEach(element => {
                 element.style.border = 'none';
                 element.style.borderRadius = '0px';
-            })    
+            })  
+            text.innerHTML = `Ура! Вы решили головоломку за ${textMin.textContent}${textTime.textContent} мин и ${textSteps.textContent} ходов`;  
         }
     }
 }

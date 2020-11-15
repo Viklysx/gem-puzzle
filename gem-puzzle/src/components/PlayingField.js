@@ -5,7 +5,6 @@ class PlayingField {
         this.wrapper = document.querySelector('#root');
         this.cellSize = 100;
         this.init();
-
     }
 
     init() {
@@ -31,7 +30,7 @@ class PlayingField {
             return
         }
 
-        cell.element.style.top = `${this.empty.top*this.cellSize + 100}px`;
+        cell.element.style.top = `${this.empty.top*this.cellSize + 150}px`;
         cell.element.style.left = `${this.empty.left*this.cellSize}px`;
 
         const emptyLeft = this.empty.left; // координаты пустой ячейки
@@ -42,8 +41,11 @@ class PlayingField {
 
         cell.left = emptyLeft;
         cell.top = emptyTop;
+    }
 
-        const final = new Utils(this.cells);
+    moveAndFinal(index) {
+        this.move(index);
+        const final = new Utils(this.cells, this.timerName);
         final.checkFinal();
     }
 
@@ -70,10 +72,6 @@ class PlayingField {
             node: 'span',
             class: 'text-time-min'
         });
-        const hourText = this.createElements({
-            node: 'span',
-            class: 'text-time-hour '
-        });
         const stepText = this.createElements({
             node: 'span',
             class: 'text-step'
@@ -84,10 +82,9 @@ class PlayingField {
         });
         timer.textContent = 'Время: ';
         minText.textContent = '0 : ';
-        hourText.textContent = '0 : ';
         secText.textContent = '0';
         stepText.textContent = 'Ходы: ';
-        timerTextBlock.append(timer, hourText, minText, secText);
+        timerTextBlock.append(timer, minText, secText);
         stepsTextBlock.append(stepText, stepTextContent);
         this.wrapper.append(timerTextBlock, stepsTextBlock);
         let value;
@@ -127,18 +124,29 @@ class PlayingField {
                 element: cell
             })
 
-            cell.style.top = `${top*this.cellSize + 100}px`;
+            cell.style.top = `${top*this.cellSize + 150}px`;
             cell.style.left = `${left*this.cellSize}px`;
             cell.style['background-position'] = `calc((100% / 3) * ${leftImg}) calc((100% / 3) * ${topImg})`;
             this.wrapper.append(cell);
 
             cell.addEventListener('click', () => {          
                 this.massMix.push(i);
-                this.move(i);
+                // this.move(i);
+                this.moveAndFinal(i);
                 steps++;
                 stepTextContent.innerHTML = steps;
             })
         }
+        const finalText = this.createElements({
+            node: 'div',
+            class: 'text-final-block'
+        });
+        const spanFinalText = this.createElements({
+            node: 'span',
+            class: 'text-final'
+        });
+        finalText.append(spanFinalText);
+        this.wrapper.append(finalText);
 
         let elements = document.querySelectorAll('.cell');
         elements.forEach(key => {
@@ -156,7 +164,6 @@ class PlayingField {
 
     addButtons() {
         const textTime = document.querySelector('.text-time');
-        const textHour = document.querySelector('.text-time-hour');
         const textMin = document.querySelector('.text-time-min');
         const textSteps = document.querySelector('.text-step-content');
         const wrapButtons = this.createElements({
@@ -201,7 +208,6 @@ class PlayingField {
             clearInterval(this.timerName);
             textTime.innerHTML = ' 0';
             textMin.innerHTML = ' 0 :';
-            textHour.innerHTML = '0 :';
             textSteps.innerHTML = '0';
         });
 
@@ -233,7 +239,8 @@ class PlayingField {
         massMix = massMix.reverse();
         for (let i = 0; i < massMix.length; i++) {
             setTimeout(() => {
-                this.move(massMix[i]);
+                // this.move(massMix[i]);
+                this.moveAndFinal(massMix[i]);
             }, 100 * (i / 2));
         }
     }
@@ -241,20 +248,13 @@ class PlayingField {
     timer() {
         let sec = 0;
         let min = 0;
-        let hour = 0;
         const textTime = document.querySelector('.text-time');
-        const textHour = document.querySelector('.text-time-hour');
         const textMin = document.querySelector('.text-time-min');
         this.timerName = setInterval(function () {
             if (sec > 59) {
                 sec = 0;
                 min++;
                 textMin.innerHTML = min + ' :';
-            }
-            if (min > 59) {
-                min = 0;
-                hour++;
-                textHour.innerHTML = hour + ' :';
             }
             textTime.innerHTML = ' ' + sec;
             sec++;

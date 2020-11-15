@@ -54,12 +54,21 @@ span {
     visibility: hidden;
 }
 
-.text-step, .text-time, .text-time-hour, .text-time-min, .text-step, .text-step-content {
+.text-step, .text-time, .text-time-hour, .text-time-min, .text-step, .text-step-content, .text-final {
     font-size: 25px;
     color: white;
     position: absolute;
     top: 30px;
     display: contents;
+}
+
+.text-final-block {
+    text-align: center;
+}
+
+.text-final {
+    color:  #19bc8b;
+    font-size: 30px;
 }
 
 .time-wrapper {
