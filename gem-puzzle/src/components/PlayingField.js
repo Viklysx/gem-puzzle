@@ -50,6 +50,9 @@ class PlayingField {
     }
 
     startCombination() {
+        const cellsOwl = JSON.parse(localStorage.getItem('cells-owl'));
+        let combinationMix = [];      
+        
         const numbers = Array.from(Array(16).keys());
         const combination = [];
         const timerTextBlock = this.createElements({
@@ -90,10 +93,20 @@ class PlayingField {
         let value;
         let steps = 0;
         this.timer(0);
-        for (let i = 1; i <= 15; i++) {
-            value = numbers[i];
-            combination.push(value); // выигрышное расположение элементов
+        if (cellsOwl == null) {
+            for (let i = 1; i <= 15; i++) {
+                value = numbers[i];
+                combination.push(value); // выигрышное расположение элементов
+            }
         }
+        else {
+            cellsOwl.sort((prev, next) => prev.left - next.left);
+            cellsOwl.sort((prev, next) => prev.top - next.top);
+            cellsOwl.forEach(keys => {
+            combination.push(keys.value);
+        });
+        }
+        
         // проверяем комбинацию на решаемость
         let z = 0;
         for (let i = 0; i < combination.length - 1; i++) {
@@ -129,7 +142,7 @@ class PlayingField {
             cell.style['background-position'] = `calc((100% / 3) * ${leftImg}) calc((100% / 3) * ${topImg})`;
             this.wrapper.append(cell);
 
-            cell.addEventListener('click', () => {          
+            cell.addEventListener('click', () => {
                 this.massMix.push(i);
                 // this.move(i);
                 this.moveAndFinal(i);
@@ -153,7 +166,8 @@ class PlayingField {
             key.style.backgroundImage = `url(./img/${indexImg}.jpg)`;
         })
         this.addButtons();
-        this.stirring();
+        if (cellsOwl == null) this.stirring();
+        
     }
 
     createElements(options) {
@@ -232,7 +246,8 @@ class PlayingField {
             let randomNumber = (Math.floor(Math.random() * 15));
             this.move(randomNumber);
             this.massMix.push(randomNumber);
-        }
+        }           
+        localStorage.setItem('cells-owl', JSON.stringify(this.cells));
     }
 
     stirringBack(massMix) {
