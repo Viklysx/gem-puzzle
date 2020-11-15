@@ -4,6 +4,11 @@ class PlayingField {
     constructor() {
         this.wrapper = document.querySelector('#root');
         this.cellSize = 100;
+        this.init();
+
+    }
+
+    init() {
         this.empty = { // пустая ячейка
             value: 0,
             top: 3,
@@ -11,6 +16,7 @@ class PlayingField {
         }
         this.cells = [];
         this.massMix = [];
+        this.massReset = [];
         this.cells.push(this.empty); // здесь храним информацию о клетках
         this.startCombination();
     }
@@ -62,7 +68,7 @@ class PlayingField {
 
             cell.className = 'cell';
             cell.innerHTML = `<span>${combination[i]}</span>`;
-            indexImg = (Math.floor(Math.random() * 15));
+            indexImg = (Math.floor(Math.random() * 14 + 1));
 
             const left = (i) % 4; // позиция ячейки, считая слева
             const top = ((i) - left) / 4;
@@ -83,6 +89,7 @@ class PlayingField {
             this.wrapper.append(cell);
 
             cell.addEventListener('click', () => {
+                this.massMix.push(i);
                 this.move(i);
             })
         }
@@ -141,7 +148,15 @@ class PlayingField {
 
         resolve.addEventListener('click', () => {
             this.stirringBack(this.massMix);
-        })
+        });
+
+        newGame.addEventListener('click', () => {
+            const node = document.querySelector('.root');
+            while (node.firstChild) {
+                node.removeChild(node.firstChild);
+            }
+            this.init();
+        });
     }
 
     stirring() {
@@ -149,15 +164,15 @@ class PlayingField {
             let randomNumber = (Math.floor(Math.random() * 15));
             this.move(randomNumber);
             this.massMix.push(randomNumber);
-        }     
-    } 
-    
+        }
+    }
+
     stirringBack(massMix) {
         massMix = massMix.reverse();
         for (let i = 0; i < massMix.length; i++) {
             setTimeout(() => {
                 this.move(massMix[i]);
-            }, 100 * (i + 0.2));
+            }, 100 * (i / 2));
         }
     }
 }
