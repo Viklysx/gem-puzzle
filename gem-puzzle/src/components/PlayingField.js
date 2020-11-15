@@ -22,10 +22,9 @@ class PlayingField {
 
     move(index) {
         const cell = this.cells[index + 1]; // перемещаемый элементы
-
+        console.log('cell', cell);
         const leftDiff = Math.abs(this.empty.left - cell.left);
         const topDiff = Math.abs(this.empty.top - cell.top);
-
         if (leftDiff + topDiff > 1) { // если ячейки не соседние
             return
         }
@@ -44,6 +43,7 @@ class PlayingField {
     }
 
     moveAndFinal(index) {
+        console.log('index', index);
         this.move(index);
         const final = new Utils(this.cells, this.timerName);
         final.checkFinal();
@@ -51,8 +51,6 @@ class PlayingField {
 
     startCombination() {
         const cellsOwl = JSON.parse(localStorage.getItem('cells-owl'));
-        let combinationMix = [];      
-        
         const numbers = Array.from(Array(16).keys());
         const combination = [];
         const timerTextBlock = this.createElements({
@@ -98,15 +96,16 @@ class PlayingField {
                 value = numbers[i];
                 combination.push(value); // выигрышное расположение элементов
             }
-        }
-        else {
+        } else {
             cellsOwl.sort((prev, next) => prev.left - next.left);
             cellsOwl.sort((prev, next) => prev.top - next.top);
             cellsOwl.forEach(keys => {
-            combination.push(keys.value);
-        });
+                combination.push(keys.value);
+            });
+            this.empty.left = Number(localStorage.getItem('cells-owl-empty-left'));
+            this.empty.top = Number(localStorage.getItem('cells-owl-empty-top'));
         }
-        
+
         // проверяем комбинацию на решаемость
         let z = 0;
         for (let i = 0; i < combination.length - 1; i++) {
@@ -117,38 +116,43 @@ class PlayingField {
             }
         }
         let indexImg;
-        for (let i = 0; i < 15; i++) {
-            const cell = document.createElement('div');
+        let nullIndex;
+        for (let i = 0; i < combination.length; i++) {
+            if (combination[i] === 0) nullIndex = i;
+            else {
+                const cell = document.createElement('div');
 
-            cell.className = 'cell';
-            cell.innerHTML = `<span class="span-element">${combination[i]}</span>`;
-            indexImg = (Math.floor(Math.random() * 14 + 1));
+                cell.className = 'cell';
+                cell.innerHTML = `<span class="span-element">${combination[i]}</span>`;
+                indexImg = (Math.floor(Math.random() * 14 + 1));
 
-            const left = (i) % 4; // позиция ячейки, считая слева
-            const top = ((i) - left) / 4;
+                const left = (i) % 4; // позиция ячейки, считая слева
+                const top = ((i) - left) / 4;
 
-            const leftImg = (combination[i] - 1) % 4; // позиция ячейки, считая слева
-            const topImg = ((combination[i] - 1) - leftImg) / 4;
+                const leftImg = (combination[i] - 1) % 4; // позиция ячейки, считая слева
+                const topImg = ((combination[i] - 1) - leftImg) / 4;
 
-            this.cells.push({
-                value: combination[i],
-                left: left,
-                top: top,
-                element: cell
-            })
+                this.cells.push({
+                    value: combination[i],
+                    left: left,
+                    top: top,
+                    element: cell
+                })
 
-            cell.style.top = `${top*this.cellSize + 150}px`;
-            cell.style.left = `${left*this.cellSize}px`;
-            cell.style['background-position'] = `calc((100% / 3) * ${leftImg}) calc((100% / 3) * ${topImg})`;
-            this.wrapper.append(cell);
+                cell.style.top = `${top*this.cellSize + 150}px`;
+                cell.style.left = `${left*this.cellSize}px`;
+                cell.style['background-position'] = `calc((100% / 3) * ${leftImg}) calc((100% / 3) * ${topImg})`;
+                this.wrapper.append(cell);
 
-            cell.addEventListener('click', () => {
-                this.massMix.push(i);
-                // this.move(i);
-                this.moveAndFinal(i);
-                steps++;
-                stepTextContent.innerHTML = steps;
-            })
+                cell.addEventListener('click', () => {
+                    this.massMix.push(i);
+                    // this.move(i);
+                    // this.moveAndFinal(combination[i]-1);
+                    (combination.length == 16 && i > nullIndex) ? this.moveAndFinal(i - 1) : this.moveAndFinal(i);
+                    steps++;
+                    stepTextContent.innerHTML = steps;
+                })
+            }
         }
         const finalText = this.createElements({
             node: 'div',
@@ -167,7 +171,7 @@ class PlayingField {
         })
         this.addButtons();
         if (cellsOwl == null) this.stirring();
-        
+
     }
 
     createElements(options) {
@@ -230,6 +234,7 @@ class PlayingField {
             while (node.firstChild) {
                 node.removeChild(node.firstChild);
             }
+            localStorage.setItem('cells-owl', null);
             this.init();
         });
 
@@ -246,8 +251,11 @@ class PlayingField {
             let randomNumber = (Math.floor(Math.random() * 15));
             this.move(randomNumber);
             this.massMix.push(randomNumber);
-        }           
+        }
+
         localStorage.setItem('cells-owl', JSON.stringify(this.cells));
+        localStorage.setItem('cells-owl-empty-left', this.cells[0].left);
+        localStorage.setItem('cells-owl-empty-top', this.cells[0].top);
     }
 
     stirringBack(massMix) {
