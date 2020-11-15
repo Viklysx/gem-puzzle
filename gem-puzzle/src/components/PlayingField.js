@@ -47,6 +47,32 @@ class PlayingField {
     startCombination() {
         const numbers = Array.from(Array(16).keys());
         const combination = [];
+        const timerTextBlock = this.createElements({
+            node: 'div',
+            class: 'time-wrapper'
+        });
+        const timer = this.createElements({
+            node: 'span',
+            class: 'text-step'
+        });
+        const secText = this.createElements({
+            node: 'span',
+            class: 'text-time'
+        });
+        const minText = this.createElements({
+            node: 'span',
+            class: 'text-time-min'
+        });
+        const hourText = this.createElements({
+            node: 'span',
+            class: 'text-time-hour '
+        });
+        timer.textContent = 'Время: ';
+        minText.textContent = '0 : ';
+        hourText.textContent = '0 : ';
+        timerTextBlock.append(timer, hourText, minText, secText);
+        this.wrapper.append(timerTextBlock);
+        this.timer(0);
         let value;
 
         for (let i = 1; i <= 15; i++) {
@@ -109,6 +135,9 @@ class PlayingField {
     }
 
     addButtons() {
+        const textTime = document.querySelector('.text-time');
+        const textHour = document.querySelector('.text-time-hour');
+        const textMin = document.querySelector('.text-time-min');
         const wrapButtons = this.createElements({
             node: 'div',
             class: 'root-elements'
@@ -148,6 +177,10 @@ class PlayingField {
 
         resolve.addEventListener('click', () => {
             this.stirringBack(this.massMix);
+            clearInterval(this.timerName);
+            textTime.innerHTML = ' 0';
+            textMin.innerHTML = '0 :';
+            textHour.innerHTML = '0 :';
         });
 
         newGame.addEventListener('click', () => {
@@ -181,6 +214,29 @@ class PlayingField {
                 this.move(massMix[i]);
             }, 100 * (i / 2));
         }
+    }
+
+    timer() {
+        let sec = 0;
+        let min = 0;
+        let hour = 0;
+        const textTime = document.querySelector('.text-time');
+        const textHour = document.querySelector('.text-time-hour');
+        const textMin = document.querySelector('.text-time-min');
+        this.timerName = setInterval(function () {
+            if (sec > 59) {
+                sec = 0;
+                min++;
+                textMin.innerHTML = min + ' :';
+            }
+            if (min > 59) {
+                min = 0;
+                hour++;
+                textHour.innerHTML = hour + ' :';
+            }
+            textTime.innerHTML = ' ' + sec;
+            sec++;
+        }, 1000);
     }
 }
 

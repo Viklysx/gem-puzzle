@@ -54,6 +54,19 @@ span {
     visibility: hidden;
 }
 
+.text-step, .text-time, .text-time-hour, .text-time-min {
+    font-size: 25px;
+    color: white;
+    position: absolute;
+    top: 30px;
+    display: contents;
+}
+
+.time-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
 $colors: (new-game: #a972cb,
     reset: #ef6eae,
     resolve: #19bc8b,
