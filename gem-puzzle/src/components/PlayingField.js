@@ -1,4 +1,4 @@
-import CheckButtons from './CheckButtons';
+import Utils from './Utils';
 
 class PlayingField {
     constructor() {
@@ -42,12 +42,19 @@ class PlayingField {
 
         cell.left = emptyLeft;
         cell.top = emptyTop;
+
+        const final = new Utils(this.cells);
+        final.checkFinal();
     }
 
     startCombination() {
         const numbers = Array.from(Array(16).keys());
         const combination = [];
         const timerTextBlock = this.createElements({
+            node: 'div',
+            class: 'time-wrapper'
+        });
+        const stepsTextBlock = this.createElements({
             node: 'div',
             class: 'time-wrapper'
         });
@@ -67,14 +74,25 @@ class PlayingField {
             node: 'span',
             class: 'text-time-hour '
         });
+        const stepText = this.createElements({
+            node: 'span',
+            class: 'text-step'
+        });
+        const stepTextContent = this.createElements({
+            node: 'span',
+            class: 'text-step-content'
+        });
         timer.textContent = 'Время: ';
         minText.textContent = '0 : ';
         hourText.textContent = '0 : ';
+        secText.textContent = '0';
+        stepText.textContent = 'Ходы: ';
         timerTextBlock.append(timer, hourText, minText, secText);
-        this.wrapper.append(timerTextBlock);
-        this.timer(0);
+        stepsTextBlock.append(stepText, stepTextContent);
+        this.wrapper.append(timerTextBlock, stepsTextBlock);
         let value;
-
+        let steps = 0;
+        this.timer(0);
         for (let i = 1; i <= 15; i++) {
             value = numbers[i];
             combination.push(value); // выигрышное расположение элементов
@@ -114,9 +132,11 @@ class PlayingField {
             cell.style['background-position'] = `calc((100% / 3) * ${leftImg}) calc((100% / 3) * ${topImg})`;
             this.wrapper.append(cell);
 
-            cell.addEventListener('click', () => {
+            cell.addEventListener('click', () => {          
                 this.massMix.push(i);
                 this.move(i);
+                steps++;
+                stepTextContent.innerHTML = steps;
             })
         }
 
@@ -138,6 +158,7 @@ class PlayingField {
         const textTime = document.querySelector('.text-time');
         const textHour = document.querySelector('.text-time-hour');
         const textMin = document.querySelector('.text-time-min');
+        const textSteps = document.querySelector('.text-step-content');
         const wrapButtons = this.createElements({
             node: 'div',
             class: 'root-elements'
@@ -179,8 +200,9 @@ class PlayingField {
             this.stirringBack(this.massMix);
             clearInterval(this.timerName);
             textTime.innerHTML = ' 0';
-            textMin.innerHTML = '0 :';
+            textMin.innerHTML = ' 0 :';
             textHour.innerHTML = '0 :';
+            textSteps.innerHTML = '0';
         });
 
         newGame.addEventListener('click', () => {
