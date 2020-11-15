@@ -62,7 +62,7 @@ class PlayingField {
 
             cell.className = 'cell';
             cell.innerHTML = `<span>${combination[i]}</span>`;
-            indexImg = combination[0];
+            indexImg = (Math.floor(Math.random() * 15));
 
             const left = (i) % 4; // позиция ячейки, считая слева
             const top = ((i) - left) / 4;
