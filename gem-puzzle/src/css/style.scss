@@ -50,6 +50,10 @@ span {
     text-shadow: 0px 0px 10px #000;
 }
 
+.hide {
+    visibility: hidden;
+}
+
 $colors: (new-game: #a972cb,
     reset: #ef6eae,
     resolve: #19bc8b,

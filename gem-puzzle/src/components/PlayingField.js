@@ -67,7 +67,7 @@ class PlayingField {
             const cell = document.createElement('div');
 
             cell.className = 'cell';
-            cell.innerHTML = `<span>${combination[i]}</span>`;
+            cell.innerHTML = `<span class="span-element">${combination[i]}</span>`;
             indexImg = (Math.floor(Math.random() * 14 + 1));
 
             const left = (i) % 4; // позиция ячейки, считая слева
@@ -156,6 +156,13 @@ class PlayingField {
                 node.removeChild(node.firstChild);
             }
             this.init();
+        });
+
+        viewNumbers.addEventListener('click', () => {
+            const spanBlocks = document.querySelectorAll('.span-element');
+            spanBlocks.forEach(element => {
+                element.classList.toggle('hide');
+            })
         });
     }
 
