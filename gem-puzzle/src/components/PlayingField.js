@@ -13,8 +13,10 @@ class PlayingField {
             top: 3,
             left: 3
         }
-        this.cells = [];
-        this.massMix = [];
+        const mix = JSON.parse(localStorage.getItem('cells-owl-massMix'));
+        if (mix != null && mix != 'null') this.massMix = mix;
+        else this.massMix = [];
+        this.cells = [];       
         this.massReset = [];
         this.nullIndex;
         this.combinationlength;
@@ -23,6 +25,27 @@ class PlayingField {
     }
 
     move(index) {
+        let cell = this.cells[index + 1];
+        const leftDiff = Math.abs(this.empty.left - cell.left);
+        const topDiff = Math.abs(this.empty.top - cell.top);
+        if (leftDiff + topDiff > 1) { // если ячейки не соседние
+            return
+        }
+
+        cell.element.style.top = `${this.empty.top*this.cellSize + 150}px`;
+        cell.element.style.left = `${this.empty.left*this.cellSize}px`;
+
+        const emptyLeft = this.empty.left; // координаты пустой ячейки
+        const emptyTop = this.empty.top;
+
+        this.empty.left = cell.left; // координаты текущей ячейки
+        this.empty.top = cell.top;
+
+        cell.left = emptyLeft;
+        cell.top = emptyTop;
+    }
+
+    moveReload(index) {
         let cell;
         const cellsOwl = JSON.parse(localStorage.getItem('cells-owl'));
         if (cellsOwl == null) cell = this.cells[index + 1];
@@ -54,6 +77,12 @@ class PlayingField {
 
     moveAndFinal(index) {
         this.move(index);
+        const final = new Utils(this.cells, this.timerName);
+        final.checkFinal();
+    }
+
+    moveAndFinalReload(index) {
+        this.moveReload(index);
         const final = new Utils(this.cells, this.timerName);
         final.checkFinal();
     }
@@ -155,9 +184,11 @@ class PlayingField {
 
                 cell.addEventListener('click', () => {
                     this.massMix.push(i);
+                    localStorage.setItem('cells-owl-massMix', JSON.stringify(this.massMix));
                     // this.move(i);
                     // this.moveAndFinal(combination[i]-1);
                     (combination.length == 16 && i > this.nullIndex) ? this.moveAndFinal(i - 1): this.moveAndFinal(i);
+                    console.log('this.cells2', this.cells);
                     steps++;
                     stepTextContent.innerHTML = steps;
                 })
@@ -239,6 +270,7 @@ class PlayingField {
         });
 
         newGame.addEventListener('click', () => {
+            localStorage.setItem('cells-owl-massMix', null);
             const node = document.querySelector('.root');
             while (node.firstChild) {
                 node.removeChild(node.firstChild);
@@ -261,6 +293,7 @@ class PlayingField {
             this.move(randomNumber);
             this.massMix.push(randomNumber);
         }
+        console.log('this.cells', this.cells);
         localStorage.setItem('cells-owl', JSON.stringify(this.cells));
         localStorage.setItem('cells-owl-massMix', JSON.stringify(this.massMix));
         localStorage.setItem('cells-owl-empty-left', this.cells[0].left);
@@ -269,12 +302,9 @@ class PlayingField {
 
     stirringBack(massMix) {
         massMix = massMix.reverse();
-        console.log('massMix', massMix);
-        console.log('this.nullIndex', this.nullIndex);
         for (let i = 0; i < massMix.length; i++) {
-            setTimeout(() => {
-                // this.move(massMix[i]);
-                this.moveAndFinal(massMix[i]);
+            setTimeout(() => {              
+            this.moveAndFinal(massMix[i]);               
             }, 100 * (i / 2));
         }
     }
