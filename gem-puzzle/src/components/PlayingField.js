@@ -39,8 +39,9 @@ class PlayingField {
         if (leftDiff + topDiff > 1) { // если ячейки не соседние
             return
         }
-        this.steps++;
+        this.steps++;       
         this.sound.play();
+        this.sound.currentTime = 0.0;
         stepTextContent.innerHTML = this.steps;
 
         cell.element.style.top = `${this.empty.top*this.cellSize + 150}px`;
@@ -75,6 +76,7 @@ class PlayingField {
         }
         this.steps++;
         this.sound.play();
+        this.sound.currentTime = 0.0;
         stepTextContent.innerHTML = this.steps;
         cell.element.style.top = `${this.empty.top*this.cellSize + 150}px`;
         cell.element.style.left = `${this.empty.left*this.cellSize}px`;
@@ -302,6 +304,12 @@ class PlayingField {
             spanBlocks.forEach(element => {
                 element.classList.toggle('hide');
             })
+        });
+
+        sound.addEventListener('click', () => {
+            if(!this.sound.classList.contains('sound')) this.sound.muted = true;
+            else this.sound.muted = false;          
+            this.sound.classList.toggle('sound');
         });
     }
 
