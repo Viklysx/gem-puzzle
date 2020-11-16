@@ -27,13 +27,11 @@ class PlayingField {
         const cellsOwl = JSON.parse(localStorage.getItem('cells-owl'));
         if (cellsOwl == null) cell = this.cells[index + 1];
         else {
-            if (index >= this.nullIndex) {
-                this.cells.forEach((key, i) => {
-                    if (key.value === index+1) {
-                        cell = this.cells[i];
-                    }
-                })
-            } else cell = this.cells[index + 1];
+            this.cells.forEach((key, i) => {
+                if (key.value === (index + 1)) {
+                    cell = this.cells[i];
+                }
+            })
         }
         const leftDiff = Math.abs(this.empty.left - cell.left);
         const topDiff = Math.abs(this.empty.top - cell.top);
@@ -258,7 +256,7 @@ class PlayingField {
     }
 
     stirring() {
-        for (let i = 1; i <= 300; i++) {
+        for (let i = 1; i <= 150; i++) {
             let randomNumber = (Math.floor(Math.random() * 15));
             this.move(randomNumber);
             this.massMix.push(randomNumber);
