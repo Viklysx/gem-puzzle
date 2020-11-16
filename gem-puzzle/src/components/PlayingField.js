@@ -6,6 +6,9 @@ class PlayingField {
         this.cellSize = 100;
         if (localStorage.getItem('flag-owl') == null) localStorage.setItem('flag-owl', true);
         else localStorage.setItem('flag-owl', false);
+        this.sound = document.createElement("audio");
+        this.sound.setAttribute("src", './audio/sound.wav');
+        this.wrapper.appendChild(this.sound);  
         this.init();
     }
 
@@ -24,10 +27,7 @@ class PlayingField {
         this.nullIndex;
         this.combinationlength;
         this.cells.push(this.empty); // здесь храним информацию о клетках
-        this.startCombination();     
-        this.sound = document.createElement("audio");
-        this.sound.setAttribute("src", './audio/sound.wav');
-        this.wrapper.appendChild(this.sound);  
+        this.startCombination();           
         document.querySelector('.text-step-content').innerHTML = '0';
     }
 
@@ -313,8 +313,7 @@ class PlayingField {
         });
     }
 
-    stirring() {
-        
+    stirring() {       
         for (let i = 1; i <= 150; i++) {
             let randomNumber = (Math.floor(Math.random() * 15));
             this.move(randomNumber);
