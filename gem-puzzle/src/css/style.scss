@@ -93,7 +93,9 @@ $color in $colors {
 }
 
 .new-game:hover,
-.new-game:focus {
+.new-game:focus,
+.sound:hover,
+.sound:focus  {
     transform: translateY(-4px);
 }
 
@@ -105,6 +107,10 @@ $color in $colors {
 .resolve:hover,
 .resolve:focus {
     transform: translateY(-0.25em);
+}
+
+.reset, .rating {
+    display: none;
 }
 
 button {

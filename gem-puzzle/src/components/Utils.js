@@ -33,7 +33,7 @@ class Utils {
                 element.style.border = 'none';
                 element.style.borderRadius = '0px';
             })  
-            text.innerHTML = `Ура! Вы решили головоломку за ${textMin.textContent}${textTime.textContent} мин и ${textSteps.textContent} ходов`;  
+            text.innerHTML = `Ура! Вы решили головоломку за ${textMin.textContent}${textTime.textContent} мин и ${textSteps.textContent} ходов`; 
         }
     }
 }

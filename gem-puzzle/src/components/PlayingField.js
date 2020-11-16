@@ -4,6 +4,8 @@ class PlayingField {
     constructor() {
         this.wrapper = document.querySelector('#root');
         this.cellSize = 100;
+        if (localStorage.getItem('flag-owl') == null) localStorage.setItem('flag-owl', true);
+        else localStorage.setItem('flag-owl', false);
         this.init();
     }
 
@@ -15,22 +17,28 @@ class PlayingField {
         }
         const mix = JSON.parse(localStorage.getItem('cells-owl-massMix'));
         if (mix != null && mix != 'null') this.massMix = mix;
-        else this.massMix = [];
+        else this.massMix = [];    
+        this.steps = 0;  
         this.cells = [];       
         this.massReset = [];
         this.nullIndex;
         this.combinationlength;
         this.cells.push(this.empty); // здесь храним информацию о клетках
         this.startCombination();
+        
+        document.querySelector('.text-step-content').innerHTML = '0';
     }
 
     move(index) {
         let cell = this.cells[index + 1];
+        let stepTextContent = document.querySelector('.text-step-content');
         const leftDiff = Math.abs(this.empty.left - cell.left);
         const topDiff = Math.abs(this.empty.top - cell.top);
         if (leftDiff + topDiff > 1) { // если ячейки не соседние
             return
         }
+        this.steps++;
+        stepTextContent.innerHTML = this.steps;
 
         cell.element.style.top = `${this.empty.top*this.cellSize + 150}px`;
         cell.element.style.left = `${this.empty.left*this.cellSize}px`;
@@ -47,8 +55,9 @@ class PlayingField {
 
     moveReload(index) {
         let cell;
+        let stepTextContent = document.querySelector('.text-step-content');
         const cellsOwl = JSON.parse(localStorage.getItem('cells-owl'));
-        if (cellsOwl == null) cell = this.cells[index + 1];
+        if (cellsOwl == null || cellsOwl == 'null') cell = this.cells[index + 1];
         else {
             this.cells.forEach((key, i) => {
                 if (key.value === (index + 1)) {
@@ -61,7 +70,8 @@ class PlayingField {
         if (leftDiff + topDiff > 1) { // если ячейки не соседние
             return
         }
-
+        this.steps++;
+        stepTextContent.innerHTML = this.steps;
         cell.element.style.top = `${this.empty.top*this.cellSize + 150}px`;
         cell.element.style.left = `${this.empty.left*this.cellSize}px`;
 
@@ -127,9 +137,8 @@ class PlayingField {
         stepsTextBlock.append(stepText, stepTextContent);
         this.wrapper.append(timerTextBlock, stepsTextBlock);
         let value;
-        let steps = 0;
         this.timer(0);
-        if (cellsOwl == null) {
+        if (cellsOwl == null || cellsOwl == 'null') {
             for (let i = 1; i <= 15; i++) {
                 value = numbers[i];
                 combination.push(value); // выигрышное расположение элементов
@@ -188,9 +197,12 @@ class PlayingField {
                     // this.move(i);
                     // this.moveAndFinal(combination[i]-1);
                     (combination.length == 16 && i > this.nullIndex) ? this.moveAndFinal(i - 1): this.moveAndFinal(i);
-                    console.log('this.cells2', this.cells);
-                    steps++;
-                    stepTextContent.innerHTML = steps;
+                    localStorage.setItem('cells-owl', null);
+                    localStorage.setItem('cells-owl', JSON.stringify(this.cells));
+                    localStorage.setItem('cells-owl-empty-left', this.cells[0].left);
+                    localStorage.setItem('cells-owl-empty-top', this.cells[0].top);
+                    // steps++;
+                    // stepTextContent.innerHTML = steps;
                 })
             }
         }
@@ -210,7 +222,7 @@ class PlayingField {
             key.style.backgroundImage = `url(./img/${indexImg}.jpg)`;
         })
         this.addButtons();
-        if (cellsOwl == null) this.stirring();
+        if (cellsOwl == null || cellsOwl == 'null') this.stirring();
     }
 
     createElements(options) {
@@ -267,9 +279,11 @@ class PlayingField {
             textTime.innerHTML = ' 0';
             textMin.innerHTML = ' 0 :';
             textSteps.innerHTML = '0';
+            this.timer(0);
         });
 
         newGame.addEventListener('click', () => {
+            localStorage.setItem('flag-owl', true);
             localStorage.setItem('cells-owl-massMix', null);
             const node = document.querySelector('.root');
             while (node.firstChild) {
@@ -288,25 +302,29 @@ class PlayingField {
     }
 
     stirring() {
+        
         for (let i = 1; i <= 150; i++) {
             let randomNumber = (Math.floor(Math.random() * 15));
             this.move(randomNumber);
             this.massMix.push(randomNumber);
         }
-        console.log('this.cells', this.cells);
         localStorage.setItem('cells-owl', JSON.stringify(this.cells));
         localStorage.setItem('cells-owl-massMix', JSON.stringify(this.massMix));
         localStorage.setItem('cells-owl-empty-left', this.cells[0].left);
         localStorage.setItem('cells-owl-empty-top', this.cells[0].top);
+        this.steps = 0; 
     }
 
     stirringBack(massMix) {
+        
         massMix = massMix.reverse();
         for (let i = 0; i < massMix.length; i++) {
-            setTimeout(() => {              
-            this.moveAndFinal(massMix[i]);               
+            setTimeout(() => {     
+            if (localStorage.getItem('flag-owl') == 'false' || localStorage.getItem('flag-owl') == false) this.moveAndFinalReload(massMix[i]);         
+            else this.moveAndFinal(massMix[i]);               
             }, 100 * (i / 2));
         }
+        this.steps = 0; 
     }
 
     timer() {
