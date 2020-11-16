@@ -23,7 +23,18 @@ class PlayingField {
     }
 
     move(index) {
-        const cell = this.cells[index + 1]; // перемещаемый элемент
+        let cell;
+        const cellsOwl = JSON.parse(localStorage.getItem('cells-owl'));
+        if (cellsOwl == null) cell = this.cells[index + 1];
+        else {
+            if (index >= this.nullIndex) {
+                this.cells.forEach((key, i) => {
+                    if (key.value === index+1) {
+                        cell = this.cells[i];
+                    }
+                })
+            } else cell = this.cells[index + 1];
+        }
         const leftDiff = Math.abs(this.empty.left - cell.left);
         const topDiff = Math.abs(this.empty.top - cell.top);
         if (leftDiff + topDiff > 1) { // если ячейки не соседние
@@ -47,15 +58,6 @@ class PlayingField {
         this.move(index);
         const final = new Utils(this.cells, this.timerName);
         final.checkFinal();
-
-        // if (index > this.nullIndex+1 ) {
-        //     console.log('index0', index, this.cells[index-1]);
-        //     this.move(index-1);
-        // }
-        // else {
-        //     console.log('index1', index, this.cells[index]);
-        //     this.move(index);
-        // }
     }
 
     startCombination() {
@@ -157,7 +159,7 @@ class PlayingField {
                     this.massMix.push(i);
                     // this.move(i);
                     // this.moveAndFinal(combination[i]-1);
-                    (combination.length == 16 && i > this.nullIndex) ? this.moveAndFinal(i - 1) : this.moveAndFinal(i);
+                    (combination.length == 16 && i > this.nullIndex) ? this.moveAndFinal(i - 1): this.moveAndFinal(i);
                     steps++;
                     stepTextContent.innerHTML = steps;
                 })
@@ -261,7 +263,6 @@ class PlayingField {
             this.move(randomNumber);
             this.massMix.push(randomNumber);
         }
-        // console.log(this.massMix);
         localStorage.setItem('cells-owl', JSON.stringify(this.cells));
         localStorage.setItem('cells-owl-massMix', JSON.stringify(this.massMix));
         localStorage.setItem('cells-owl-empty-left', this.cells[0].left);
