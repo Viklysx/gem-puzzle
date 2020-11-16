@@ -131,3 +131,15 @@ button {
         color: #fff;
     }
 }
+
+@media (max-width: 413px) {
+    .cell {
+        width: 60px;
+        height: 60px;
+        font-size: 40px;
+    }
+
+    .text-final {
+        font-size: 25px;
+    }
+}
