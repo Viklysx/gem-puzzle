@@ -22,7 +22,6 @@ class Utils {
                 if (keys.top == 3 && keys.left == keys.value - 13) counter++;
             }
         })
-        console.log(counter);
         if (counter >= 15) {  
             clearInterval(this.timerName);
             const cell = document.querySelectorAll('.cell');
