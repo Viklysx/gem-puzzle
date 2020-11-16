@@ -24,12 +24,14 @@ class PlayingField {
         this.nullIndex;
         this.combinationlength;
         this.cells.push(this.empty); // здесь храним информацию о клетках
-        this.startCombination();
-        
+        this.startCombination();     
+        this.sound = document.createElement("audio");
+        this.sound.setAttribute("src", './audio/sound.wav');
+        this.wrapper.appendChild(this.sound);  
         document.querySelector('.text-step-content').innerHTML = '0';
     }
 
-    move(index) {
+    move(index) {      
         let cell = this.cells[index + 1];
         let stepTextContent = document.querySelector('.text-step-content');
         const leftDiff = Math.abs(this.empty.left - cell.left);
@@ -38,6 +40,7 @@ class PlayingField {
             return
         }
         this.steps++;
+        this.sound.play();
         stepTextContent.innerHTML = this.steps;
 
         cell.element.style.top = `${this.empty.top*this.cellSize + 150}px`;
@@ -53,7 +56,7 @@ class PlayingField {
         cell.top = emptyTop;
     }
 
-    moveReload(index) {
+    moveReload(index) {      
         let cell;
         let stepTextContent = document.querySelector('.text-step-content');
         const cellsOwl = JSON.parse(localStorage.getItem('cells-owl'));
@@ -71,6 +74,7 @@ class PlayingField {
             return
         }
         this.steps++;
+        this.sound.play();
         stepTextContent.innerHTML = this.steps;
         cell.element.style.top = `${this.empty.top*this.cellSize + 150}px`;
         cell.element.style.left = `${this.empty.left*this.cellSize}px`;
