@@ -275,7 +275,7 @@ class PlayingField {
         resolve.textContent = 'Решение';
         viewNumbers.textContent = 'Скрыть/показать цифры';
         rating.textContent = 'Топ 10';
-        wrapButtons.append(newGame, reset, resolve, viewNumbers, rating, sound);
+        wrapButtons.append(newGame, reset, viewNumbers, rating, sound);
         this.wrapper.append(wrapButtons);
 
         resolve.addEventListener('click', () => {
