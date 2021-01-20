@@ -1,2 +1,1 @@
-# viklysx-JS2020Q3
-Private repository for @viklysx
+Таск выполнен в процессе обучения в школе RSSchool.
