@@ -1,2 +1,3 @@
-# viklysx-JS2020Q3
-Private repository for @viklysx
+Учебный таск-игра «Пятнашки»
+***
+Ссылка: https://viklysx-gem-puzzle.netlify.app
