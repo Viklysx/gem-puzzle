@@ -1,0 +1,145 @@
+*,
+*:after,
+*:before {
+    box-sizing: border-box;
+    padding: 0px;
+    margin: 0px;
+}
+
+body {
+    font-size: 16px;
+    font-family: 'Caveat', cursive;
+    background: rgb(36, 35, 35);
+}
+
+.root {
+    max-width: 400px;
+    margin: 0 auto;
+    position: relative;
+
+    &-elements {
+        position: absolute;
+        top: 600px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    &-timer {
+
+    }
+}
+
+.cell {
+    width: 100px;
+    height: 100px;
+    border: 2px solid white;
+    border-radius: 10px;
+    position: absolute;
+    font-size: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s;
+    cursor: pointer;
+    background-size: 400% 400%;
+    color: white;
+}
+
+span {
+    text-shadow: 0px 0px 10px #000;
+}
+
+.hide {
+    visibility: hidden;
+}
+
+.text-step, .text-time, .text-time-hour, .text-time-min, .text-step, .text-step-content, .text-final {
+    font-size: 25px;
+    color: white;
+    position: absolute;
+    top: 30px;
+    display: contents;
+}
+
+.text-final-block {
+    text-align: center;
+}
+
+.text-final {
+    color:  #19bc8b;
+    font-size: 30px;
+}
+
+.time-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+$colors: (new-game: #a972cb,
+    reset: #ef6eae,
+    resolve: #19bc8b,
+    sound: #a972cb,
+    numbers: #19bc8b,
+    rating: #ef6eae);
+
+
+@each $button,
+$color in $colors {
+    .#{$button} {
+        --color: #{$color};
+        --hover: #{adjust-hue($color, 45deg)};
+    }
+}
+
+.new-game:hover,
+.new-game:focus,
+.sound:hover,
+.sound:focus  {
+    transform: translateY(-4px);
+}
+
+.reset:hover,
+.reset:focus {
+    transform: translateY(-4px);
+}
+
+.resolve:hover,
+.resolve:focus {
+    transform: translateY(-0.25em);
+}
+
+.reset, .rating {
+    display: none;
+}
+
+button {
+    color: var(--color);
+    transition: 0.25s;
+    background: none;
+    border: 2px solid;
+    font: inherit;
+    line-height: 1;
+    margin: 8px;
+    font-size: 25px;
+    padding: 5px;
+    width: 150px;
+
+    &:hover,
+    &:focus {
+        border-color: var(--hover);
+        color: #fff;
+    }
+}
+
+@media (max-width: 413px) {
+    .cell {
+        width: 60px;
+        height: 60px;
+        font-size: 40px;
+    }
+
+    .text-final {
+        font-size: 25px;
+    }
+}
